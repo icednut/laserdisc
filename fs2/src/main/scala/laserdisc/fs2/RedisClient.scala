@@ -143,6 +143,7 @@ object RedisClient {
                       // as the last action runner is restarted
                       serverAvailable(address) handleErrorWith { failure =>
                         log.errorS(s"Failure of publishing connection to $address", failure) >>
+                          Stream.eval(inFlight.set(Vector.empty)) >>
                           runner(serverStream, Some(address))
                       }
                   }
